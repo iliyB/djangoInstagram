@@ -1,0 +1,22 @@
+{% extends 'gui_instagram/base_template.html' %}
+
+{% block title %}
+    Users
+{% endblock %}
+
+{% block content %}
+    {% for user in users %}
+            <div class="card" style="width: 20rem;">
+            <div class="card-body">
+                <p class="card-text">{{ user.username }}</p>
+                <p class="card-text">{{ user.activate }}</p>
+            </div>
+                <form action="{{ user.get_absolute_url }}" method="get">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        Select
+                    </button>
+                </form>
+        </div>
+    {% endfor %}
+{% endblock %}
