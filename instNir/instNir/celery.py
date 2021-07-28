@@ -14,6 +14,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'update_data': {
         'task': 'gui_instagram.tasks.update_data_about_users',
-        'schedule': crontab(minute=0, hour='*/1')
+        'schedule': crontab(minute='*/15')
     }
 }

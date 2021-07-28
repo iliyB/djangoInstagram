@@ -80,8 +80,11 @@ class instagramUser():
             print("Detector isn't define. Medias will not be add")
 
         for media in medias:
+
+            if check_media(user, media.pk):
+                continue
+
             print("New media")
-            check_media(user, media.pk)
 
             if media.media_type == 1:
                 type_media = 'photo'
@@ -152,8 +155,11 @@ class instagramUser():
             print("Detector isn't define. Stories will not be add")
 
         for story in stories:
+
+            if not check_story(user, story.pk):
+                continue
+
             print("New Story")
-            check_story(user, story.pk)
 
             if story.media_type == 1:
                 type_story = 'photo'
