@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 
+
+
 def save_plot(dict: {}, path: str, left: float):
     s = [dict[key] for key in dict.keys()]
     x = range(len(s))
@@ -9,3 +11,5 @@ def save_plot(dict: {}, path: str, left: float):
     plt.yticks(x, dict.keys())
     plt.subplots_adjust(left=left)
     plt.savefig(path)
+
+

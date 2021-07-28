@@ -10,26 +10,34 @@ from .login import LOGIN, PASSWORD
 
 @app.task
 def add_data_about_user(username: str):
-    user = get_user_like_obj(username)
-    instagramClient = instagramUser(LOGIN, PASSWORD)
+    try:
+        instagramClient = instagramUser(LOGIN, PASSWORD)
 
-    instagramClient.processing_resources_from_stories(user, 'media/')
-    instagramClient.processing_resources_from_main_page(user, 'media/')
+        instagramClient.processing_resources_from_stories(username, 'media/')
+        instagramClient.processing_resources_from_main_page(username, 'media/')
+
+        
+    except Exception as e:
+         print(e)
 
 
 
 @app.task
 def update_data_about_users():
-    usernames = get_usernames()
-    instagramClient = instagramUser(LOGIN, PASSWORD)
+    try:
+        usernames = get_usernames()
+        instagramClient = instagramUser(LOGIN, PASSWORD)
+    except Exception as e:
+        print(e)
+    else:
+        for username in usernames:
+            try:
+                if not check_activate(username):
+                    continue
 
-    for username in usernames:
+                instagramClient.processing_resources_from_stories(username, 'media/')
+                instagramClient.processing_resources_from_main_page(username, 'media/')
 
-        if not check_activate(username):
-            continue
-
-        user = get_user_like_obj(username)
-
-        instagramClient.processing_resources_from_stories(user, '..media/')
-        instagramClient.processing_resources_from_main_page(user, '..media/')
+            except Exception as e:
+                print(e)
 

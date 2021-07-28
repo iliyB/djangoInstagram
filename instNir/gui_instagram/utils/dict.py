@@ -31,3 +31,10 @@ def merge_dict(dict1: {}, dict2: {}) -> {}:
         else:
             dict1.update({key: dict2.get(key)})
     return dict1
+
+def convert_dict_to_array(dict: {}) -> []:
+    array = []
+    for key in dict:
+        sub_array = [key, dict.get(key)]
+        array.append(sub_array)
+    return array

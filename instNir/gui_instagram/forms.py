@@ -11,3 +11,10 @@ class UserObjectForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form_control'}),
         }
+
+class DeleteUserForm(forms.Form):
+
+    username = forms.CharField(max_length=50)
+
+
+

@@ -46,6 +46,12 @@ def get_usernames() -> []:
     return usernames
 
 
+def update_time(username: str):
+    user = UserObject.objects.get(username=username)
+    user.last_update = datetime.now()
+    user.save()
+
+
 def check_media(user: UserObject, id_media: str) -> bool:
     if user.medias.get(id_media) is None:
         return False
@@ -60,9 +66,9 @@ def check_story(user: UserObject, id_story: str) -> bool:
         return True
 
 
-def add_media(user: UserObject, id_media: str, media_type: str, objects: {}, hashtags: [], friends: [],
-              datetime_: datetime, ):
-    user.medias.update({id_media: {'type': media_type, 'date': datetime_,
+def add_media(user: UserObject, id_media: str, media_type: str, likes: int, comments: int, objects: {}, hashtags: [],
+              friends: [], datetime_: datetime, ):
+    user.medias.update({id_media: {'type': media_type, 'likes': likes, 'comments': comments, 'date': datetime_,
                                    'objects': objects, 'hashtags': hashtags,
                                    'friends': friends}})
     user.save()
@@ -75,6 +81,29 @@ def add_story(user: UserObject, id_story: str, story_type: str, objects: {}, has
                                     'friends': friends}})
     user.save()
 
+
+def get_num_of_likes(username: str) -> {}:
+    user = UserObject.objects.get(username=username)
+    likes = {}
+    for media in user.medias:
+        num_of_likes = user.medias.get(media).get('likes')
+        if likes.get(num_of_likes) is None:
+            likes.update({num_of_likes: 1})
+        else:
+            likes.update({num_of_likes: likes.get(num_of_likes) + 1})
+    return likes
+
+
+def get_num_of_comments(username: str) -> {}:
+    user = UserObject.objects.get(username=username)
+    comments = {}
+    for media in user.medias:
+        num_of_comments = user.medias.get(media).get('comments')
+        if comments.get(num_of_comments) is None:
+            comments.update({num_of_comments: 1})
+        else:
+            comments.update({num_of_comments: comments.get(num_of_comments) + 1})
+    return comments
 
 def get_medias_hashtags(username: str) -> {}:
     user = UserObject.objects.get(username=username)
@@ -136,7 +165,7 @@ def get_objects_of_stories(username: str) -> {}:
     return objects
 
 
-def get_user_objects_of_medias(username: str) -> {}:
+def get_objects_of_medias(username: str) -> {}:
     user = UserObject.objects.get(username=username)
     objects = {}
     for media in user.medias:
@@ -150,21 +179,20 @@ def get_user_objects_of_medias(username: str) -> {}:
 
 def get_types_of_stories(username: str) -> {}:
     user = UserObject.objects.get(username=username)
-    types = {'photo': 0, 'video': 0}
+    types = {}
     for story in user.stories:
-        if user.stories.get(story).get('type') == 'photo':
-            types.update({'photo': types.get('photo') + 1})
-        else:
-            types.update({'video': types.get('video') + 1})
+        if types.get(user.stories.get(story).get('type')) is None:
+            types.update({user.stories.get(story).get('type'): 1})
+        types.update({user.stories.get(story).get('type'): types.get(user.stories.get(story).get('type')) + 1})
     return types
 
 
 def get_types_of_medias(username: str) -> {}:
     user = UserObject.objects.get(username=username)
-    types = {'photo': 0, 'video': 0}
+    types = {}
     for media in user.medias:
-        if user.medias.get(media).get('type') == 'photo':
-            types.update({'photo': types.get('photo') + 1})
+        if types.get(user.medias.get(media).get('type')) is None:
+            types.update({user.medias.get(media).get('type'): 1})
         else:
-            types.update({'video': types.get('video') + 1})
+            types.update({user.medias.get(media).get('type'): types.get(user.medias.get(media).get('type')) + 1})
     return types
