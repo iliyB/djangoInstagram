@@ -1,9 +1,9 @@
 from django import forms
-from .models import UserObject
+from data_processing.models import UserObject
 
 
 class UserObjectForm(forms.ModelForm):
-
+    """Форма для добавление нового наблюдаемого пользователя"""
     class Meta:
         model = UserObject
         fields = ['username']
@@ -13,7 +13,7 @@ class UserObjectForm(forms.ModelForm):
         }
 
 class DeleteUserForm(forms.Form):
-
+    """Форма для удаления наблюдаемого пользователя"""
     username = forms.CharField(max_length=50)
 
 

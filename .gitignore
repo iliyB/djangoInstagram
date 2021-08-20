@@ -1,2 +1,22 @@
-# Project exclude paths
-/venv/
+.idea
+idea
+.DS_Store
+
+*.egg-info/
+.installed.cfg
+*.egg
+
+venv
+*.h5
+*.env
+*.avi
+celerybeat-schedule
+
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.pyc
+*.pyc
+
+!*media/.gitkeep
+media/*

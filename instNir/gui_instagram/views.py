@@ -1,29 +1,35 @@
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .forms import UserObjectForm, DeleteUserForm
-from .models import UserObject
-from .tasks import add_data_about_user
-from .utils.database import *
-from .utils.dict import convert_dict_to_array
-from .utils.view_utils import *
+from django.views.generic import ListView
+
+from data_processing.tasks import add_data_about_user
+from data_processing.models import UserObject
+
+from gui_instagram.forms import UserObjectForm, DeleteUserForm
+from gui_instagram.services.view_utils import (
+    get_objects_from_all, get_objects_from_story, get_objects_from_media,
+)
+from gui_instagram.services.filter import (
+    Filter, SourceResource,
+    get_title_from_filter,
+)
+from gui_instagram.services.utils.dict import convert_dict_to_plot_array
+
+from django.conf import settings
+
+class UserListView(ListView):
+    """Выводит список наблюдаемых пользователей"""
+    model = UserObject
+    template_name = 'gui_instagram/users_list.html'
 
 
-# Create your views here.
-
-class Users(View):
-
-    def get(self, request):
-        users = UserObject.objects.all()
-        #users = get_list_or_404(UserObject)
-        return render(request, 'gui_instagram/users.html', context={'users': users})
-
-
-
-class Add(View):
+class AddUser(View):
+    """Добавление нового наблюдаемого пользователя"""
 
     def get(self, request):
         form = UserObjectForm()
-        return render(request, 'gui_instagram/add.html', context={'form': form})
+        #print(f"{settings.LOGIN} -  {settings.PASSWORD}")
+        return render(request, 'gui_instagram/add_user.html', context={'form': form})
 
     def post(self, request):
         bound_form = UserObjectForm(request.POST)
@@ -33,43 +39,47 @@ class Add(View):
             add_data_about_user.delay(new_form.username)
             return redirect('users_url')
 
-        return render(request, 'gui_instagram/add.html', context={'form': bound_form})
+        return render(request, 'gui_instagram/add_user.html', context={'form': bound_form})
 
 
 
 
-class User(View):
+class DetailUser(View):
+    """Информация о пользователе: графики и тд"""
 
     def get(self, request, username, resource, filter):
         user = get_object_or_404(UserObject, username=username)
+        filter = Filter(filter)
 
         context = {
             'user': user,
             'title': get_title_from_filter(filter),
             'resource': resource
         }
+        resource = SourceResource(resource)
 
-        if resource == ALL:
+        if resource == SourceResource.ALL:
             objects = get_objects_from_all(username, filter)
-            context.update({'objects': convert_dict_to_array(objects)})
+            context.update({'objects': convert_dict_to_plot_array(objects)})
             return render(request, 'gui_instagram/current_user/current_user_all.html', context=context)
-        elif resource == MEDIA:
+        elif resource == SourceResource.MEDIA:
             objects = get_objects_from_media(username, filter)
-            context.update({'objects': convert_dict_to_array(objects)})
+            context.update({'objects': convert_dict_to_plot_array(objects)})
             return render(request, 'gui_instagram/current_user/current_user_media.html', context=context)
-        elif resource == STORY:
+        elif resource == SourceResource.STORY:
             objects = get_objects_from_story(username, filter)
-            context.update({'objects': convert_dict_to_array(objects)})
+            context.update({'objects': convert_dict_to_plot_array(objects)})
             return render(request, 'gui_instagram/current_user/current_user_story.html', context=context)
         else:
             objects = {}
-            context.update({'objects': convert_dict_to_array(objects)})
+            context.update({'objects': convert_dict_to_plot_array(objects)})
             return render(request, 'gui_instagram/current_user/current_user_all.html', context=context)
         
 
 
 
-class Delete(View):
+class DeleteUser(View):
+    """Удаление наблюдаемого пользователя"""
     
     def get(self, request, username):
         form = DeleteUserForm()
