@@ -55,7 +55,7 @@
     cd instNir
     python manage.py makemigrations
     python manage.py migrate
-    pythom manage.py runserver
+    python manage.py runserver
 
 ### 5. Запуск Celery
 
