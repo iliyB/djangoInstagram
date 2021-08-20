@@ -30,7 +30,7 @@
 
     pip install tensorflow==2.4.0
 
-###2. Установка параметров
+### 2. Установка параметров
 
 В файле instNir/.env находятся параметры, необходимые для функционирования проекта:  
 
@@ -55,7 +55,7 @@
     cd instNir
     python manage.py makemigrations
     python manage.py migrate
-    pythom manage.py runserver
+    python manage.py runserver
 
 ### 5. Запуск Celery
 
