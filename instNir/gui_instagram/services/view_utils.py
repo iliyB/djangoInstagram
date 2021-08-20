@@ -9,7 +9,7 @@ from gui_instagram.services.filter import Filter
 
 
 def get_objects_from_media(username: str, filter: Filter, length_dir: int = 20) -> Counter:
-    """Возращает все объекты согласно filter для пользователя с заданным username из ресурсов с главной страницы"""
+    """Возвращает все объекты согласно filter для пользователя с заданным username из ресурсов с главной страницы"""
 
     if filter == Filter.OBJECTS:
         objects = get_medias_objects(username=username).most_common(length_dir)
@@ -30,7 +30,7 @@ def get_objects_from_media(username: str, filter: Filter, length_dir: int = 20) 
 
 
 def get_objects_from_story(username: str, filter: Filter, length_dir: int = 20) -> Counter:
-    """Возращает все объекты согласно filter для пользователя с заданным username из историй"""
+    """Возвращает все объекты согласно filter для пользователя с заданным username из историй"""
 
     if filter == Filter.OBJECTS:
         objects = get_stories_objects(username=username).most_common(length_dir)
@@ -47,7 +47,7 @@ def get_objects_from_story(username: str, filter: Filter, length_dir: int = 20) 
 
 
 def get_objects_from_all(username: str, filter: Filter) -> Counter:
-    """Возращает все объекты согласно filter для пользователя с заданным username из всех ресурсов"""
+    """Возвращает все объекты согласно filter для пользователя с заданным username из всех ресурсов"""
 
     return get_objects_from_media(username, filter) + get_objects_from_story(username, filter)
 

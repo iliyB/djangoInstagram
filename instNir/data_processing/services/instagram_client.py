@@ -215,7 +215,8 @@ class InstagramUser:
 
         return medias
 
-    def _get_story_friends(self, story) -> [str]:
+    @staticmethod
+    def _get_story_friends(story) -> [str]:
         """Возвращает отмеченных пользователей в истории"""
 
         friends = []
@@ -224,7 +225,8 @@ class InstagramUser:
 
         return friends
 
-    def _get_media_friends(self, media) -> [str]:
+    @staticmethod
+    def _get_media_friends(media) -> [str]:
         """Возвращает отмеченных пользователей в медиа"""
 
         friends = []
@@ -233,7 +235,8 @@ class InstagramUser:
 
         return friends
 
-    def _get_media_type_name(self, media) -> str:
+    @staticmethod
+    def _get_media_type_name(media) -> str:
         """Возвращает тип медиа в виде строки"""
 
         if media.media_type == 1:
@@ -243,7 +246,8 @@ class InstagramUser:
 
         return media.product_type
 
-    def _get_story_type_name(self, story) -> str:
+    @staticmethod
+    def _get_story_type_name(story) -> str:
         """Возвращает тип истории в виде строки"""
 
         if story.media_type == 1:
@@ -251,12 +255,14 @@ class InstagramUser:
 
         return story.product_type
 
-    def _create_datetime_from_date_and_time(self, date: datetime.date, time: datetime.time) -> datetime:
+    @staticmethod
+    def _create_datetime_from_date_and_time(date: datetime.date, time: datetime.time) -> datetime:
         """Создает datetime из date и time"""
         return datetime.datetime(year=date.year, month=date.month, day=date.day,
                         hour=time.hour, minute=time.minute, second=time.second, microsecond=time.microsecond)
 
-    def _get_hashtags_from_caption(self, caption: str) -> [str]:
+    @staticmethod
+    def _get_hashtags_from_caption(caption: str) -> [str]:
         """Возвращает из caption media, используемые в ней хештеги"""
 
         try:
@@ -275,7 +281,8 @@ class InstagramUser:
 
         return hashtags
 
-    def _create_folders(self, username: str, path: str, target: type_target) -> str:
+    @staticmethod
+    def _create_folders(username: str, path: str, target: type_target) -> str:
         """
             Создает главную директорию пользователя с заданным username,
             отвечающего за хранение его ресурсов
