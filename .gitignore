@@ -9,6 +9,7 @@ idea
 venv
 *.h5
 *.env
+*.log
 *.avi
 celerybeat-schedule
 
