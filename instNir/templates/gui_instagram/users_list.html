@@ -6,16 +6,23 @@
 
 {% block content %}
     {% for user in userobject_list %}
-            <div class="card" style="width: 20rem;">
-            <div class="card-body">
-                <p class="card-text">{{ user.username }}</p>
-                <p class="card-text">{{ user.activate }}</p>
+    <div class="card" style="max-width: 100%; min-height: 10%; margin-bottom: 2%;">
+        <div class="card-body">
+            <div style="float: left; max-width: 25%"><a href="{{ user.get_absolute_url }}"><img src="{{ user.pic.url }}" style="max-width: 100%; height: auto;"></a></div>
+            <div style="float: left; margin-left: 5%">
+                <p class="card-text">Никнейм: <b>{{ user.username }}</b></p>
+                <p class="card-text">Количество записей: <b>{{ user.media_count }}</b></p>
+                <p class="card-text">Подписчиков: <b>{{ user.follower_count }}</b></p>
+                <p class="card-text">Подписан на: <b>{{ user.following_count }}</b></p>
+                <p class="card-text">Бизнес аккаунт: <b>{{ user.is_business }}</b></p>
+                <p class="card-text">Последняя дата обновления: <b>{{ user.last_update }}</b></p>
             </div>
-                <form action="{{ user.get_absolute_url }}" method="get">
-                    <button type="submit" class="btn btn-success">
-                        Select
-                    </button>
-                </form>
+            {% if user.is_updated %}
+            <div style="float: left; margin-left: -5%">
+                <p class="card-text" style="color: orange; font-size: 150%">Обновляется</p>
+            </div>
+            {% endif %}
         </div>
+    </div>
     {% endfor %}
 {% endblock %}

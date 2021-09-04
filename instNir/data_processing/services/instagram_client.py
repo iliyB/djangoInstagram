@@ -2,9 +2,12 @@ import os
 import datetime
 from enum import Enum
 from collections import Counter
+import requests
+from typing import Optional
 
 from instagrapi import Client
 
+from data_processing.models import DataAboutUser
 from data_processing.services.utils.detector import Detector
 from data_processing.services.utils.file_utils import create_folder
 from data_processing.services.utils.database import (
@@ -12,6 +15,8 @@ from data_processing.services.utils.database import (
     add_media, add_story,
     get_user_like_obj,
     update_time,
+    set_info_about_user,
+    is_updated_set_true
 )
 
 
@@ -37,9 +42,34 @@ class InstagramUser:
 
     def processing_resources_user(self, username: str, path: str = os.getcwd()):
         """Обрабатывает данные пользователя с заданным username с главной страницы и историй"""
-
+        
+        is_updated_set_true(username)
+        set_info_about_user(username, self.get_info(username))
         self.processing_resources_from_main_page(username, path)
         self.processing_resources_form_stories(username, path)
+        update_time(username)
+
+    def get_info(self, username: str) -> DataAboutUser:
+        """Возвращает основную информация о профиле Instagram в виде nametuple DataAboutUser"""
+        user_id = self.client.user_id_from_username(username)
+        info = self.client.user_info(user_id)
+
+        return DataAboutUser(
+            info.pk,
+            info.full_name,
+            info.is_private,
+            info.media_count,
+            info.follower_count,
+            info.following_count,
+            info.biography,
+            info.external_url,
+            info.public_email,
+            info.contact_phone_number,
+            info.is_business,
+            info.business_category_name,
+            "https://www.instagram.com/" + info.username + "/",
+            self._download_profile_pict(info.profile_pic_url_hd)
+        )
 
     def processing_resources_from_main_page(self, username: str, path: str = os.getcwd()):
         """Обрабатывает данные пользователя с заданным username с главной страницы"""
@@ -85,8 +115,6 @@ class InstagramUser:
                 date_time
             )
 
-        update_time(username)
-
     def processing_resources_form_stories(self, username: str, path: str = os.getcwd()):
         """Обрабатывает данные пользователя с заданным username из историй"""
 
@@ -128,8 +156,6 @@ class InstagramUser:
                 friends,
                 date_time
             )
-
-        update_time(username)
 
     def _get_metadata_from_story(self, story, path: str) -> Counter:
         """Получает метаданные из истории, для этого история скачивается и обрабатывается нейронной сетью"""
@@ -214,6 +240,16 @@ class InstagramUser:
         medias = self.client.user_medias(user_id)
 
         return medias
+
+    @staticmethod
+    def _download_profile_pict(url_pic: str) -> Optional[bytes]:
+        """Скачивает фотография профиля Instagram"""
+        response = requests.get(url_pic)
+
+        if not response.ok:
+            return None
+
+        return response.content
 
     @staticmethod
     def _get_story_friends(story) -> [str]:

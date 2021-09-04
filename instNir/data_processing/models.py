@@ -1,7 +1,22 @@
 from django.urls import reverse
 from djongo import models
-
 from django.utils import timezone
+from collections import namedtuple
+
+DataAboutUser = namedtuple("DataAboutUser",
+                           ["id",
+                            "full_name",
+                            "is_private",
+                            "media_count",
+                            "follower_count",
+                            "following_count",
+                            "biography",
+                            "external_link",
+                            "email", "phone",
+                            "is_business",
+                            "business_category",
+                            "instagram_link",
+                            "pic"])
 
 
 class UserObject(models.Model):
@@ -12,7 +27,23 @@ class UserObject(models.Model):
 
     username: string;
     activate: bool;
+    id: integer;
+    full_name: string;
+    is_private: bool;
+    media_count: int;
+    follower_count: int;
+    following_count: int;
+    biography: string;
+    external_link: string;
+    email: string;
+    phone: string;
+    is_business: bool;
+    business_category: string;
+    instagram_link: string;
     last_update: datetime;
+    is_updated: bool;
+    pic: ImageField;
+
 
     medias: {
         id (int): {  - где id идентификатор ресурса в Instagram
@@ -49,19 +80,105 @@ class UserObject(models.Model):
 
     """
 
-
     username = models.CharField(
         primary_key=True,
         max_length=50,
         verbose_name='Ник наблюдаемого пользователя'
     )
+
     activate = models.BooleanField(
         default=True,
         verbose_name='Параметр, отвечающие за необходимость обновления данных о пользователе'
     )
+
+    id = models.BigIntegerField(
+        default=0,
+        verbose_name="id пользователя в Instagram"
+    )
+
+    full_name = models.CharField(
+        default="",
+        verbose_name="Полное имя пользователя в Instagram",
+        max_length=250
+    )
+
+    is_private = models.BooleanField(
+        default=False,
+        verbose_name="Приватный ли аккаунт"
+    )
+
+    media_count = models.IntegerField(
+        default=0,
+        verbose_name="Количество записей пользователя"
+    )
+
+    follower_count = models.IntegerField(
+        default=0,
+        verbose_name="Количество подписчиков пользователя"
+    )
+
+    following_count = models.IntegerField(
+        default=0,
+        verbose_name="Количество пользователей на которых подписан объект наблюдения"
+    )
+
+    biography = models.CharField(
+        default="",
+        max_length=500,
+        verbose_name="Биография пользователя"
+    )
+
+    external_link = models.CharField(
+        max_length=250,
+        default="",
+        verbose_name="Внешние ссылки пользователя"
+    )
+
+    email = models.CharField(
+        max_length=50,
+        default="",
+        verbose_name="Email пользователя"
+    )
+
+    phone = models.CharField(
+        max_length=30,
+        default="",
+        verbose_name="Телефон пользователя"
+    )
+
+    is_business = models.BooleanField(
+        default=False,
+        verbose_name="Является ли аккаунт бизнес аккаунтом"
+    )
+
+    business_category = models.CharField(
+        max_length=200,
+        default="",
+        verbose_name="Категория бизнес аккаунта"
+    )
+
+    instagram_link = models.CharField(
+        max_length=250,
+        default="",
+        verbose_name="Ссылка на аккаунт Instagram"
+    )
+
     last_update = models.DateTimeField(
-        default=timezone.now,
-        verbose_name='Показывает время последнего обновление данных пользователя'
+        auto_now_add=True,
+        verbose_name="Показывает время последнего обновление данных пользователя"
+    )
+
+    is_updated = models.BooleanField(
+        default=True,
+        verbose_name="Указывает, находится ли данные об аккаунте в процессе обновления"
+    )
+    
+    pic = models.ImageField(
+        upload_to="icon/",
+        default="icon/default_pic.jpeg",
+        null=True,
+        blank=True,
+        verbose_name="Хранит иконку профиля пользователя"
     )
 
     medias = models.JSONField(

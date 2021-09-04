@@ -7,7 +7,7 @@ from data_processing.services.utils.database import get_usernames, check_activat
 
 @app.task
 def add_data_about_user(username: str):
-    """Обрабатывает информацию о пользователи из социлаьной сети при инициализации этоо пользователя"""
+    """Обрабатывает информацию о пользователи из социальной сети при инициализации этого пользователя"""
     try:
 
         instagramClient = InstagramUser(settings.ENV_CONFIG.get("INSTAGRAM_LOGIN"), settings.ENV_CONFIG.get("INSTAGRAM_PASSWORD"))

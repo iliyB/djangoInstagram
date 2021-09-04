@@ -3,7 +3,7 @@ from django.views import View
 from django.views.generic import ListView
 
 from data_processing.tasks import add_data_about_user
-from data_processing.models import UserObject
+from data_processing.models import UserObject, DataAboutUser
 
 from gui_instagram.forms import UserObjectForm, DeleteUserForm
 from gui_instagram.services.view_utils import (
@@ -15,7 +15,6 @@ from gui_instagram.services.filter import (
 )
 from gui_instagram.services.utils.dict import convert_dict_to_plot_array
 
-from django.conf import settings
 
 class UserListView(ListView):
     """Выводит список наблюдаемых пользователей"""
