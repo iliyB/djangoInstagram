@@ -12,7 +12,12 @@
         </div>
         <div style="float: left; margin-left: 5%">
             <p class="card-text">Никнейм: <b><a href="{{ user.instagram_link }}" target="_blank">{{ user.username }}</a></b></p>
+            {% if user.medias|length == user.media_count %}
             <p class="card-text">Количество записей: <b>{{ user.media_count }}</b></p>
+            {% endif %}
+            {% if not user.medias|length == user.media_count %}
+            <p class="card-text">Обработано записей: <b>{{ user.medias|length }}/{{ user.media_count }}</b></p>
+            {% endif %}
             <p class="card-text">Подписчиков: <b>{{ user.follower_count }}</b></p>
             <p class="card-text">Подписан на: <b>{{ user.following_count }}</b></p>
             {% if user.is_updated %}
