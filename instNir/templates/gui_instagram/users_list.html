@@ -10,7 +10,7 @@
         <div class="card-body">
             <div style="float: left; max-width: 25%"><a href="{{ user.get_absolute_url }}"><img src="{{ user.pic.url }}" style="max-width: 100%; height: auto;"></a></div>
             <div style="float: left; margin-left: 5%">
-                <p class="card-text">Никнейм: <b>{{ user.username }}</b></p>
+                <p class="card-text">Никнейм: <b><a href="{{ user.instagram_link }}" target="_blank">{{ user.username }}</a></b></p>
                 <p class="card-text">Количество записей: <b>{{ user.media_count }}</b></p>
                 <p class="card-text">Подписчиков: <b>{{ user.follower_count }}</b></p>
                 <p class="card-text">Подписан на: <b>{{ user.following_count }}</b></p>
@@ -25,4 +25,6 @@
         </div>
     </div>
     {% endfor %}
+
+
 {% endblock %}

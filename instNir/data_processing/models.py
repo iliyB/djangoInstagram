@@ -51,6 +51,7 @@ class UserObject(models.Model):
             likes: int; - количество лайков
             comments: int; - количество комментариев
             date: datetime; - дата опубликования
+            link: - ссылка на ресурс
             objects: [  - массив с объектами ресурса
                 {
                   name: str;  - наименование объекта
@@ -200,3 +201,6 @@ class UserObject(models.Model):
 
     def get_delete_url(self):
         return reverse('delete_url', kwargs={'username': self.username})
+    
+    def get_medias_url(self):
+        return reverse("user_medias_url", kwargs={"username": self.username})

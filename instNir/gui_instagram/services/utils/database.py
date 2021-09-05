@@ -182,3 +182,10 @@ def get_medias_types(username: str) -> Counter:
         type = user.medias.get(media).get('type')
         types[type] += 1
     return types
+
+def get_medias_links(username: str) -> [str]:
+    """
+    Возвращает ссылки на все медиа пользователя в виде списка
+    """
+    user = UserObject.objects.get(username=username)
+    return [media.get('link') for media in user.medias]

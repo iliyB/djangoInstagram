@@ -75,6 +75,12 @@ class DetailUser(View):
             return render(request, 'gui_instagram/current_user/current_user_all.html', context=context)
         
 
+class DetailUserMedias(View):
+
+    def get(self, request, username):
+        user = get_object_or_404(UserObject, username=username)
+
+        return render(request, 'gui_instagram/user_medias.html', context={"user": user})
 
 
 class DeleteUser(View):

@@ -1,0 +1,55 @@
+{% extends 'gui_instagram/base_template.html' %}
+{% load static %}
+
+{% block title %}
+    {{ user.username }} - medias
+{% endblock %}
+
+{% block content %}
+    <div class="card-body">
+        <div style="float: left; max-width: 25%"><a href="{{ user.get_absolute_url }}"><img src="{{ user.pic.url }}"
+                                                                                            style="max-width: 100%; height: auto;"></a>
+        </div>
+        <div style="float: left; margin-left: 5%">
+            <p class="card-text">Никнейм: <b><a href="{{ user.instagram_link }}" target="_blank">{{ user.username }}</a></b></p>
+            <p class="card-text">Количество записей: <b>{{ user.media_count }}</b></p>
+            <p class="card-text">Подписчиков: <b>{{ user.follower_count }}</b></p>
+            <p class="card-text">Подписан на: <b>{{ user.following_count }}</b></p>
+            {% if user.is_updated %}
+            <p class="card-text">Статус: <b style="color: orange;">Обновляется</b></p>
+            {% endif %}
+            {% if not user.is_updated %}
+            <p class="card-text">Статус: <b style="color: green;">Обновлен</b></p>
+            {% endif %}
+            <p class="card-text">Последняя дата обновления: <b>{{ user.last_update }}</b></p>
+
+        </div>
+
+
+        {% for media in user.medias.values %}
+        <div style="padding-top: 3%; width: 100%; float: left;">
+            <div style="float: left;">
+                <blockquote class="instagram-media" data-instgrm-captioned
+                            data-instgrm-permalink="{{ media.link }}?utm_source=ig_embed&amp;utm_campaign=loading"
+                            data-instgrm-version="13"
+                            style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:20%; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                </blockquote>
+            </div>
+            <div style="float: left; width: 50%; padding-left: 2%;">
+                <p style="font-size: 120%;">Объекты отображенные в ресурсе:</p>
+                {% for object in media.objects.items %}
+                    <b style="font-size: 110%;">{{ object.0 }}:</b> {{ object.1 }}<br>
+                {% endfor %}
+                {% if media.friends %}
+                    <br><p style="font-size: 120%;">Отмеченные пользователи в ресурсе:</p>
+                    {% for friend in media.friends %}
+                    <b><i><a href="https://www.instagram.com/{{ friend }}/" target="_blank">{{ friend }}</a></i></b><br>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script async src="//www.instagram.com/embed.js"></script>
+{% endblock content %}

@@ -64,7 +64,7 @@ def check_story(user: UserObject, id_story: str) -> bool:
 
 
 def add_media(user: UserObject, id_media: str, media_type: str, likes: int, comments: int, objects: {}, hashtags: [],
-              friends: [], datetime_: datetime, ) -> None:
+              friends: [], datetime_: datetime, link: str) -> None:
     """Добавляет информацию о ресурсе с главной страницы в документ пользователя user"""
     user.medias.update({
                         id_media: {
@@ -72,6 +72,7 @@ def add_media(user: UserObject, id_media: str, media_type: str, likes: int, comm
                             'likes': likes,
                             'comments': comments,
                             'date': datetime_,
+                            'link': link,
                             'objects': objects,
                             'hashtags': hashtags,
                             'friends': friends}

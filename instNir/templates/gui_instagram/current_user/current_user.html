@@ -7,27 +7,68 @@
 
 {% block content %}
 
-    <div class="card-body">
-        <p class="card-text">Username: {{ user.username }}</p>
-        <p class="card-text">Activate: {{ user.activate }}</p>
-        <p class="card-text">Last update: {{ user.last_update }}</p>
+<!--    <div class="card-body" style="float: left; display: block; max-width: 55%; max-height: 60%; overflow: auto;">-->
+<div class="card-body">
+    <div style="float: left; max-width: 25%"><a href="{{ user.get_absolute_url }}"><img src="{{ user.pic.url }}" style="max-width: 100%; height: auto;"></a></div>
+    <div style="float: left; margin-left: 5%">
+        <p class="card-text">Никнейм: <b><a href="{{ user.instagram_link }}" target="_blank">{{ user.username }}</a></b></p>
+        <p class="card-text">Приватный аккаунт: <b>{{ user.is_private }}</b></p>
+        <p class="card-text">Ссылка: <b><a href="{{ user.instagram_link }}" target="_blank">{{ user.instagram_link }}</a></b></p>
+        <p class="card-text">Количество записей: <b>{{ user.media_count }}</b></p>
+        <p class="card-text">Подписчиков: <b>{{ user.follower_count }}</b></p>
+        <p class="card-text">Подписан на: <b>{{ user.following_count }}</b></p>
+
+    </div>
+    <div style="float: left; min-width: 70%; margin-top: 2%;">
+        {% if user.is_updated %}
+        <p class="card-text">Статус: <b style="color: orange;">Обновляется</b></p>
+        {% endif %}
+        {% if not user.is_updated %}
+        <p class="card-text">Статус: <b style="color: green;">Обновлен</b></p>
+        {% endif %}
+        <p class="card-text">Последняя дата обновления: <b>{{ user.last_update }}</b></p>
+        {% if user.full_name %}
+        <p class="card-text">Полное имя: <b>{{ user.full_name }}</b></p>
+        {% endif %}
+        {% if user.biography %}
+        <p class="card-text">Описание аккаунта: <b>{{ user.biography }}</b></p>
+        {% endif %}
+        {% if user.phone %}
+        <p class="card-text">Контактный телефон: <b>{{ user.phone }}</b></p>
+        {% endif %}
+        {% if user.email %}
+        <p class="card-text">Электронный почтовый ящик: <b>{{ user.email }}</b></p>
+        {% endif %}
+        {% if user.external_link %}
+        <p class="card-text">Внешние ссылки: <b><a href="{{ user.external_link }}" target="_blank">{{ user.external_link }}</a></b></p>
+        {% endif %}
+        <p class="card-text">Бизнес аккаунт: <b>{{ user.is_business }}</b></p>
+        {% if user.business_category %}
+        <p class="card-text">Категория бизнес аккаунта: <b>{{ user.business_category }}</b></p>
+        {% endif %}
+        <a href="{{ user.get_medias_url }}">Подробнее о медиа</a>
     </div>
 
-{% block link %}
-{% endblock link %}
 
-<figure class="highcharts-figure">
+    <div style="float: left; min-width: 50%; align:center; margin: 2%;">
+        {% block link %}
+        {% endblock link %}
+    </div>
 
-    <div id="container"></div>
-    <p class="highcharts-description">
-    </p>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-<!--   <script src="{% static 'js/highcharts.container.js' %}"></script>-->
-    <script type="text/javascript">
+
+    <figure class="highcharts-figure" style="min-width: 80%; float: left;">
+
+        <div id="container"></div>
+        <p class="highcharts-description">
+        </p>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+        <!--   <script src="{% static 'js/highcharts.container.js' %}"></script>-->
+        <script type="text/javascript">
         var data = {{ objects|safe }}
         var title = {{ title|safe }}
         Highcharts.chart('container', {
@@ -60,14 +101,16 @@
                 data: data,
             }]
         });
-    </script>
-</figure>
 
+        </script>
+    </figure>
 
-    <form action="{{ user.get_delete_url }}" method="get">
+    <form action="{{ user.get_delete_url }}" method="get" style="min-width: 80%; float: left;">
         <button type="submit" class="btn btn-danger">
             Delete
         </button>
     </form>
+
+</div>
 
 {% endblock content %}

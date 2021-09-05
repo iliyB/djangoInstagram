@@ -97,6 +97,7 @@ class InstagramUser:
 
             hashtags: [str] = self._get_hashtags_from_caption(media.caption_text)
             friends: [str] = self._get_media_friends(media)
+            link: str = f"https://www.instagram.com/p/{media.code}/"
 
             if not self.detector:
                 objects = {}
@@ -112,7 +113,8 @@ class InstagramUser:
                 objects,
                 hashtags,
                 friends,
-                date_time
+                date_time,
+                link
             )
 
     def processing_resources_form_stories(self, username: str, path: str = os.getcwd()):
