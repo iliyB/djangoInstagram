@@ -13,3 +13,4 @@ keras-resnet==0.2.0
 imageai
 moviepy
 redis
+python-dotenv
