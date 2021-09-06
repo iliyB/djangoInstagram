@@ -7,9 +7,7 @@
 
 {% block content %}
     <div class="card-body">
-        <div style="float: left; max-width: 25%"><a href="{{ user.get_absolute_url }}"><img src="{{ user.pic.url }}"
-                                                                                            style="max-width: 100%; height: auto;"></a>
-        </div>
+        <div style="float: left; max-width: 25%"><a href="{{ user.get_absolute_url }}"><img src="{% if user.pic.url is not None %}{{ user.pic.url }}{% else %}{% static 'img/default_pic.jpeg' %}{% endif %}" style="max-width: 100%; height: auto;"></a></div>
         <div style="float: left; margin-left: 5%">
             <p class="card-text">Никнейм: <b><a href="{{ user.instagram_link }}" target="_blank">{{ user.username }}</a></b></p>
             {% if user.medias|length == user.media_count %}

@@ -176,9 +176,7 @@ class UserObject(models.Model):
     
     pic = models.ImageField(
         upload_to="icon/",
-        default="icon/default_pic.jpeg",
         null=True,
-        blank=True,
         verbose_name="Хранит иконку профиля пользователя"
     )
 
@@ -195,6 +193,11 @@ class UserObject(models.Model):
 
     def __str__(self):
         return self.username
+    
+    def delete(self, using=None, keep_parents=False):
+        if self.pic:
+            self.pic.storage.delete(self.pic.name)
+        super().delete()
 
     def get_absolute_url(self):
         return reverse('user_url', kwargs={'username': self.username, 'resource': 'all', 'filter':  'objects'})
