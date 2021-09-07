@@ -11,12 +11,15 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+
 import dotenv
 from pathlib import Path
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 #BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from kombu import Queue, Exchange
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -140,7 +143,27 @@ CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ":" + REDIS_PORT + '/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
+CELERY_IGNORE_RESULT = True
+# CELERY_QUEUES = (
+#     Queue("normal", Exchange("normal"), routing_key="normal"),
+# )
+# CELERY_DEFAULT_QUEUE = "normal"
+# CELERY_DEFAULT_EXCHANGE = "normal"
+# CELERY_DEFAULT_ROUTING_KEY = "normal"
+CELERY_TASK_ACKS_LATE = True
+# CELERY_WORKER_SEND_TASK_EVENTS = True
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+# CELERY_ROUTES = {
+#      "data_processing.tasks.add_data_about_user":
+#          {"queue": "normal",
+#           "routing_key": "normal",
+#           "exchange": "normal"},
+#      "data_processing.tasks.update_data_about_users":
+#          {"queue": "normal",
+#           "routing_key": "normal",
+#           "exchange": "normal"}
+# }
+CELERY_MAX_TASKS_PER_CHILD = 1
 
 ENV_CONFIG = dotenv.dotenv_values(os.path.join(BASE_DIR, ".env"))
 

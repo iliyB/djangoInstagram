@@ -62,7 +62,7 @@
 Запуск worker:
 
     cd instNir 
-    celery -A config worker -l INFO
+    celery -A config worker -l INFO -c 1
 
 Для периодичного обновления данных о наблюдаемых пользователях необходимо запустить beat:
 
