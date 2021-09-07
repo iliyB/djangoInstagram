@@ -1,5 +1,6 @@
 from collections import Counter
 
+import tensorflow as tf
 from django.conf import settings
 from moviepy.editor import VideoFileClip
 from imageai.Detection import ObjectDetection, VideoObjectDetection
@@ -17,6 +18,11 @@ class Detector:
     """
 
     def __init__(self):
+        config = tf.compat.v1.ConfigProto(gpu_options=tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.5))
+        config.gpu_options.allow_growth = True
+        session = tf.compat.v1.Session(config=config)
+        tf.compat.v1.keras.backend.set_session(session)
+
         self.detector_photo = DetectorPhoto()
         self.detector_video = DetectorVideo()
 
