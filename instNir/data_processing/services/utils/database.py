@@ -55,12 +55,12 @@ def is_updated_set_true(username: str) -> None:
 
 def check_media(user: UserObject, id_media: str) -> bool:
     """Проверяет наличие ресурса с главное страницы с id_story в документе пользователя user"""
-    return user.medias.get(id_media) is not None
+    return user.medias.get(id_media) is None
 
 
 def check_story(user: UserObject, id_story: str) -> bool:
     """Проверяет наличие истории с id_story в документе пользователя user"""
-    return user.stories.get(id_story) is not None
+    return user.stories.get(id_story) is None
 
 
 def add_media(user: UserObject, id_media: str, media_type: str, likes: int, comments: int, objects: {}, hashtags: [],

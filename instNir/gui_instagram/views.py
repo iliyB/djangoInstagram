@@ -41,8 +41,6 @@ class AddUser(View):
         return render(request, 'gui_instagram/add_user.html', context={'form': bound_form})
 
 
-
-
 class DetailUser(View):
     """Информация о пользователе: графики и тд"""
 
@@ -81,6 +79,23 @@ class DetailUserMedias(View):
         user = get_object_or_404(UserObject, username=username)
 
         return render(request, 'gui_instagram/user_medias.html', context={"user": user})
+
+
+class DetailUserStories(View):
+
+    def get(self, request, username):
+        user = get_object_or_404(UserObject, username=username)
+
+        return render(request, "gui_instagram/user_stories.html", context={"user": user})
+
+
+class UpdateUser(View):
+    
+    def get(self, _, username):
+        add_data_about_user.delay(username)
+        
+        return redirect("users_url")
+        
 
 
 class DeleteUser(View):
