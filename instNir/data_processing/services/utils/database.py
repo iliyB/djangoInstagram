@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.core.files.base import ContentFile
+from django.utils import timezone
 
 from data_processing.models import UserObject, DataAboutUser
 
@@ -43,7 +44,7 @@ def get_usernames() -> [str]:
 def update_time(username: str) -> None:
     """Обновляет время последнего обновления данных пользователя с данным username"""
     user = UserObject.objects.get(username=username)
-    user.last_update = datetime.now()
+    user.last_update = timezone.now()
     user.is_updated = False
     user.save()
 
@@ -55,12 +56,12 @@ def is_updated_set_true(username: str) -> None:
 
 def check_media(user: UserObject, id_media: str) -> bool:
     """Проверяет наличие ресурса с главное страницы с id_story в документе пользователя user"""
-    return user.medias.get(id_media) is None
+    return user.medias.get(id_media) is not None
 
 
 def check_story(user: UserObject, id_story: str) -> bool:
     """Проверяет наличие истории с id_story в документе пользователя user"""
-    return user.stories.get(id_story) is None
+    return user.stories.get(id_story) is not None
 
 
 def add_media(user: UserObject, id_media: str, media_type: str, likes: int, comments: int, objects: {}, hashtags: [],
