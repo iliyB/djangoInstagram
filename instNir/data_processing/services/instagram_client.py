@@ -1,14 +1,12 @@
 import os
 import datetime
 from enum import Enum
-from collections import Counter
 import requests
 from typing import Optional
 
 from instagrapi import Client
 
 from data_processing.models import DataAboutUser
-from data_processing.services.utils.detector import Detector
 from data_processing.services.utils.file_utils import create_folder
 from data_processing.services.utils.database import (
     check_media, check_story,
@@ -32,13 +30,10 @@ class InstagramUser:
     сети для определение объектов на ресурсах
     """
 
-    def __init__(self, login: str, password: str, detection: bool = True) -> None:
+    def __init__(self, login: str, password: str) -> None:
         self.client = Client()
         self.client.login(login, password)
         print("Login in is successful")
-
-        if detection:
-            self.detector = Detector()
 
     def processing_resources_user(self, username: str, path: str = os.getcwd()):
         """Обрабатывает данные пользователя с заданным username с главной страницы и историй"""
@@ -79,8 +74,6 @@ class InstagramUser:
         medias: [] = self._get_medias(username)
         path: str = self._create_folders(username, path, type_target.media)
 
-        if not self.detector:
-            print("Detector isn't define")
 
         for media in medias:
 
@@ -99,10 +92,7 @@ class InstagramUser:
             friends: [str] = self._get_media_friends(media)
             link: str = f"https://www.instagram.com/p/{media.code}/"
 
-            if not self.detector:
-                objects = {}
-            else:
-                objects: {} = self._get_metadata_from_media(media, path)
+            objects = {}
 
             add_media(
                 user,
@@ -125,8 +115,6 @@ class InstagramUser:
         stories: [] = self._get_stories(username)
         path: str = self._create_folders(username, path, type_target.story)
 
-        if not self.detector:
-            print("Detector isn't define")
 
         for story in stories:
 
@@ -144,10 +132,8 @@ class InstagramUser:
             hashtags: [str] = []
             friends: [str] = self._get_story_friends(story)
 
-            if not self.detector:
-                objects = {}
-            else:
-                objects: {} = self._get_metadata_from_story(story, path)
+
+            objects = {}
 
             add_story(
                 user,
@@ -159,73 +145,6 @@ class InstagramUser:
                 date_time
             )
 
-    def _get_metadata_from_story(self, story, path: str) -> Counter:
-        """Получает метаданные из истории, для этого история скачивается и обрабатывается нейронной сетью"""
-
-        if story.media_type == 1:
-
-            path_photo = self.client.story_download(story.pk, os.path.join(path, 'photo'))
-            objects = self.detector.detector_photo.detector_objects_from_photo(str(path_photo), delete_file_=True)
-
-        elif story.media_type == 2 and story.product_type == 'feed':
-
-            path_video = self.client.story_download(story.pk, os.path.join(path, 'feed'))
-            objects = self.detector.detector_video.detector_objects_from_video(str(path_video), delete_file_=True)
-
-        elif story.media_type == 2 and story.product_type == 'igtv':
-
-            path_video = self.client.story_download(story.pk, os.path.join(path, 'igtv'))
-            objects = self.detector.detector_video.detector_objects_from_video(str(path_video), delete_file_=True)
-
-        elif story.media_type == 2 and story.product_type == 'clips':
-
-            path_video = self.client.story_download(story.pk, os.path.join(path, 'clips'))
-            objects = self.detector.detector_video.detector_objects_from_video(str(path_video), delete_file_=True)
-
-        return objects
-
-    def _get_metadata_from_media(self, media, path: str) -> Counter:
-        """Получает метаданные из медиа, для этого медиа скачивается и обрабатывается нейронной сетью"""
-
-        if media.media_type == 1:
-
-            path_photo = self.client.photo_download(media.pk, os.path.join(path, 'photo'))
-            objects = self.detector.detector_photo.detector_objects_from_photo(str(path_photo), delete_file_=True)
-
-        elif media.media_type == 2 and media.product_type == 'feed':
-
-            path_video = self.client.video_download(media.pk, os.path.join(path, 'feed'))
-            objects = self.detector.detector_video.detector_objects_from_video(str(path_video), delete_file_=True)
-
-        elif media.media_type == 2 and media.product_type == 'igtv':
-
-            path_video = self.client.video_download(media.pk, os.path.join(path, 'igtv'))
-            objects = self.detector.detector_video.detector_objects_from_video(str(path_video), delete_file_=True)
-
-        elif media.media_type == 2 and media.product_type == 'clips':
-
-            path_video = self.client.video_download(media.pk, os.path.join(path, 'clips'))
-            objects = self.detector.detector_video.detector_objects_from_video(str(path_video), delete_file_=True)
-
-        elif media.media_type == 8:
-
-            paths = self.client.album_download(media.pk, os.path.join(path, 'album'))
-
-            objects = Counter()
-
-            for path_media in paths:
-                if str(path).find('.mp4'):
-                    time_objects = self.detector.detector_video.detector_objects_from_video(
-                        str(path_media),
-                        delete_file_=True
-                    )
-                else:
-                    time_objects = self.detector.detector_photo.detector_objects_from_photo(
-                        str(path_media),
-                        delete_file_=True
-                    )
-                objects += time_objects
-        return objects
 
     def _get_stories(self, username: str) -> []:
         """Возвращает все истории пользователя с заданным username"""
