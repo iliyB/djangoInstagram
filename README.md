@@ -11,7 +11,6 @@
 - Djongo (mongo)
 - Celery
 - [Highcharts JS](https://www.highcharts.com/)
-- [Imageai](https://imageai.readthedocs.io/en/latest/)
 - [Instagrapi](https://github.com/adw0rd/instagrapi)
 
 # Установка
@@ -20,25 +19,13 @@
 
     pip install -r requirements.txt
 
-В проекте используются нейронные сети для определение метаданных с ресурсов из социальной сети Instagram.  
-Желательно использовать CUDA ядра (работает намного быстрее) для нейронной сети.  
-Для imageai, при использовании CUDA ядер, необходимо cuDNN=8.0 и CUDA=11.0.
-    
-    pip install tensorflow-gpu==2.4.0
-
-При отсутствии CUDA ядер:
-
-    pip install tensorflow==2.4.0
-
 ### 2. Установка параметров
 
 Создать файл instNir/.env, в котором находятся параметры, необходимые для функционирования проекта:  
 
     INSTAGRAM_LOGIN=''
     INSTAGRAM_PASSWORD=''
-    PATH_TO_RETINA_NET_MODEL=''
 
-В ___PATH_TO_RETINA_NET_MODEL___ находится путь до модели нейронной сети RetinaNet, которую можно скачать по [ссылке](https://imageai.readthedocs.io/en/latest/detection/).  
 
 ### 3. Установка БД
 
