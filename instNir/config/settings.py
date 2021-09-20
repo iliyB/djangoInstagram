@@ -86,6 +86,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'nir-instagram-db',
+        'CLIENT': {
+            'host': 'mongodb',
+        }
     }
 }
 
@@ -166,4 +169,3 @@ CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 CELERY_MAX_TASKS_PER_CHILD = 1
 
 ENV_CONFIG = dotenv.dotenv_values(os.path.join(BASE_DIR, ".env"))
-

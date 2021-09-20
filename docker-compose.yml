@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    env_file: .env
+    command: sh -c "cd instNir && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+  
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - "6379:6379"
+
+
+volumes:
+  mongodb_data_container:
